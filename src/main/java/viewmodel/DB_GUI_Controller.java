@@ -39,6 +39,9 @@ import java.util.regex.*;
 
 public class DB_GUI_Controller implements Initializable {
 
+    @FXML
+    ProgressBar progressBar;
+
     StorageUploader store = new StorageUploader();
     @FXML
     TextField first_name, last_name, email, imageURL;
@@ -146,17 +149,28 @@ public class DB_GUI_Controller implements Initializable {
             cnUtil.retrieveId(p);
             p.setId(cnUtil.retrieveId(p));
             data.add(p);
+
             clearForm();
             shoutBox.getChildren().add(new Label("Record added successfully"));
             return true;
+    }
+
+    protected void showImage(){
+        File file = (new FileChooser()).showOpenDialog("Select an image");
+                if (file != null){
+                    img_view.setImage(new Image(file.toURI().toString()));
+                    Task<Void> uploadTask = createUploadTask(file, progressBar);
+                    progressBar.progressProperty().bind(uploadTask.progressProperty());
+                    new Thread(uploadTask).start();
+                }
     }
 
     @FXML
     protected void clearForm() {
         first_name.setText("");
         last_name.setText("");
-        department.setSelectedItem(0);
-        major.setSelectedItem(0);
+        department.setValue("department");
+        major.setValue("major");
         email.setText("");
         imageURL.setText("");
     }
