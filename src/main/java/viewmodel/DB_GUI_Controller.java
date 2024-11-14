@@ -155,8 +155,8 @@ public class DB_GUI_Controller implements Initializable {
             return true;
     }
 
-    protected void showImage(){
-        File file = (new FileChooser()).showOpenDialog("Select an image");
+    public void showImage(){
+        File file = (new FileChooser()).showOpenDialog(menuBar.getScene().getWindow());
                 if (file != null){
                     img_view.setImage(new Image(file.toURI().toString()));
                     Task<Void> uploadTask = createUploadTask(file, progressBar);
