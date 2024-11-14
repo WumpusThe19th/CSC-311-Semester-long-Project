@@ -1,9 +1,12 @@
 package viewmodel;
 
+import com.azure.storage.blob.BlobClient;
 import dao.DbConnectivityClass;
+import dao.StorageUploader;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -24,18 +27,26 @@ import model.Person;
 import service.MyLogger;
 import service.UserSession;
 
+import javax.swing.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.regex.*;
 
 public class DB_GUI_Controller implements Initializable {
 
+    StorageUploader store = new StorageUploader();
     @FXML
-    TextField first_name, last_name, department, major, email, imageURL;
+    TextField first_name, last_name, email, imageURL;
     @FXML
     ImageView img_view;
+
+    @FXML
+    ChoiceBox department, major;
     @FXML
     MenuBar menuBar;
     @FXML
@@ -129,8 +140,8 @@ public class DB_GUI_Controller implements Initializable {
             if (failAdd){
                 return failAdd;
             }
-            Person p = new Person(first_name.getText(), last_name.getText(), department.getText(),
-                    major.getText(), email.getText(), imageURL.getText());
+            Person p = new Person(first_name.getText(), last_name.getText(), (String) department.getValue(),
+                    (String) major.getValue(), email.getText(), imageURL.getText());
             cnUtil.insertUser(p);
             cnUtil.retrieveId(p);
             p.setId(cnUtil.retrieveId(p));
@@ -144,8 +155,8 @@ public class DB_GUI_Controller implements Initializable {
     protected void clearForm() {
         first_name.setText("");
         last_name.setText("");
-        department.setText("");
-        major.setText("");
+        department.setSelectedItem(0);
+        major.setSelectedItem(0);
         email.setText("");
         imageURL.setText("");
     }
@@ -202,8 +213,8 @@ public class DB_GUI_Controller implements Initializable {
     protected void editRecord() {
         Person p = tv.getSelectionModel().getSelectedItem();
         int index = data.indexOf(p);
-        Person p2 = new Person(index + 1, first_name.getText(), last_name.getText(), department.getText(),
-                major.getText(), email.getText(),  imageURL.getText());
+        Person p2 = new Person(index + 1, first_name.getText(), last_name.getText(), (String) department.getSelectedItem(),
+                (String) major.getSelectedItem(), email.getText(),  imageURL.getText());
         cnUtil.editUser(p.getId(), p2);
         data.remove(p);
         data.add(index, p2);
@@ -239,8 +250,8 @@ public class DB_GUI_Controller implements Initializable {
         Person p = tv.getSelectionModel().getSelectedItem();
         first_name.setText(p.getFirstName());
         last_name.setText(p.getLastName());
-        department.setText(p.getDepartment());
-        major.setText(p.getMajor());
+        department.setSelectedItem(p.getDepartment());
+        major.setSelectedItem(p.getMajor());
         email.setText(p.getEmail());
         imageURL.setText(p.getImageURL());
     }
@@ -295,6 +306,35 @@ public class DB_GUI_Controller implements Initializable {
             MyLogger.makeLog(
                     results.fname + " " + results.lname + " " + results.major);
         });
+    }
+
+    private Task<Void> createUploadTask(File file, ProgressBar progressBar) {
+        return new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                BlobClient blobClient = store.getContainerClient().getBlobClient(file.getName());
+                long fileSize = Files.size(file.toPath());
+                long uploadedBytes = 0;
+
+                try (FileInputStream fileInputStream = new FileInputStream(file);
+                     OutputStream blobOutputStream = blobClient.getBlockBlobClient().getBlobOutputStream()) {
+
+                    byte[] buffer = new byte[1024 * 1024]; // 1 MB buffer size
+                    int bytesRead;
+
+                    while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+                        blobOutputStream.write(buffer, 0, bytesRead);
+                        uploadedBytes += bytesRead;
+
+                        // Calculate and update progress as a percentage
+                        int progress = (int) ((double) uploadedBytes / fileSize * 100);
+                        updateProgress(progress, 100);
+                    }
+                }
+
+                return null;
+            }
+        };
     }
 
     private static enum Major {Business, CSC, CPIS}

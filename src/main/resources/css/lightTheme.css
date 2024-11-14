@@ -52,7 +52,7 @@
 
 .table-view .column-header,
 .table-view .column-header-background .filler {
-    -fx-background-color:  #999999;
+    -fx-background-color:  #444444;
      -fx-text-fill: black;
 }
 .table-view .column-header .label{
@@ -61,7 +61,7 @@
    -fx-alignment: CENTER_LEFT;
 }
 .table-view .cell{
-   -fx-cell-size: 35;
+  -fx-cell-size: 25;
   -fx-alignment: center-left;
   -fx-background-color: #FFFFFF;
   -fx-border-color: #29292D;

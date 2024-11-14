@@ -11,7 +11,7 @@ public class StorageUploader {
 
     public StorageUploader( ) {
         this.containerClient = new BlobContainerClientBuilder()
-                .connectionString("DefaultEndpointsProtocol=https;AccountName=XXXXXXXXXXX;AccountKey=XXXXXXXXoNx2TQroaPQzcXiqPNBm0TimZ+EQHd5vwS1HhYJt9aPmElI8+l4++ASty+glzA==;EndpointSuffix=core.windows.net")
+                .connectionString("DefaultEndpointsProtocol=https;AccountName=wumpblob;AccountKey=T9vwwFRDCTIPgKgWzT9SDc+yepjoeBFoHD82xEfM24GjN61CK+dAyBsbk+YCXtio3AYj96vkAYKh+AStxq0Wrg==;EndpointSuffix=core.windows.net")
                 .containerName("media-files")
                 .buildClient();
     }
