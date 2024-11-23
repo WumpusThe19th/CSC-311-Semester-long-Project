@@ -38,7 +38,7 @@ public class MainApplication extends Application {
     private void showScene1() {
         try {
             if (skipFade) {
-                UserSession curUser = UserSession.getInstance("debugGuest", "longtermorganfailure20092020", "NONE",false);
+                UserSession curUser = UserSession.getInstance("debugGuest", "longtermorganfailure20092020", "all",true);
                 Parent root = FXMLLoader.load(getClass().getResource("/view/db_interface_gui.fxml"));
                 Scene scene = new Scene(root, 900, 600);
                 //scene.getStylesheets().add(getClass().getResource("/css/lightTheme.css").toExternalForm());
@@ -63,7 +63,7 @@ public class MainApplication extends Application {
             Parent newRoot = FXMLLoader.load(getClass().getResource("/view/login.fxml").toURI().toURL());
             Scene currentScene = primaryStage.getScene();
             Parent currentRoot = currentScene.getRoot();
-            currentScene.getStylesheets().add(getClass().getResource("/css/lightTheme.css").toExternalForm());
+            //currentScene.getStylesheets().add(getClass().getResource("/css/lightTheme.css").toExternalForm());
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(3), currentRoot);
             fadeOut.setFromValue(1);
             fadeOut.setToValue(0);

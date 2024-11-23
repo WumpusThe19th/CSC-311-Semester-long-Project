@@ -27,10 +27,7 @@ import model.Person;
 import service.MyLogger;
 import service.UserSession;
 
-import javax.swing.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.Optional;
@@ -68,6 +65,8 @@ public class DB_GUI_Controller implements Initializable {
     @FXML
     Button dtBtn;
     @FXML
+    Button addBtn;
+    @FXML
     AnchorPane anchorPane;
 
     @Override
@@ -79,11 +78,107 @@ public class DB_GUI_Controller implements Initializable {
             tv_department.setCellValueFactory(new PropertyValueFactory<>("department"));
             tv_major.setCellValueFactory(new PropertyValueFactory<>("major"));
             tv_email.setCellValueFactory(new PropertyValueFactory<>("email"));
-            tv.setItems(data);
+            tv.setItems(data); //registerPrivileges.setItems(FXCollections.observableArrayList(SignUpController.Privileges.values()));
+            major.getItems().addAll(FXCollections.observableArrayList(DB_GUI_Controller.Major.values()));
+            department.getItems().addAll(FXCollections.observableArrayList(DB_GUI_Controller.Department.values()));
+            department.setValue("Department");
+            major.setValue("Major");
             setPriviledgedActions();
+            first_name.textProperty().addListener((observable, oldValue, newValue) -> {
+                onFirstNameUpdated(newValue);
+            });
+            last_name.textProperty().addListener((observable, oldValue, newValue) -> {
+                onLastNameUpdated(newValue);
+            });
+            email.textProperty().addListener((observable, oldValue, newValue) -> {
+                onEmailUpdated(newValue);
+            });
+            imageURL.textProperty().addListener((observable, oldValue, newValue) -> {
+                onImageURLUpdated(newValue);
+            });
 
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    boolean firstNameGood = false;
+    boolean lastNameGood = false;
+    boolean emailGood = false;
+    boolean imageURLGood = false;
+
+    private void shouldEnable() {
+        if (firstNameGood && lastNameGood && emailGood && imageURLGood) {
+            addBtn.setDisable(false);
+        }
+    }
+
+    //Methods to listen for when the field is updated.
+    public void onFirstNameUpdated(String newText) {
+        Pattern p = Pattern.compile("\\w{2,25}");
+        boolean tOne = newText.matches("\\w{2,25}");
+        //System.out.println(newText + " is valid:" + tOne);
+        if (!tOne) {
+            //shoutBox.getChildren().add(new Label("Name must be 2-25 characters long"));
+            if (!this.addBtn.isDisabled()) {
+                addBtn.setDisable(true);
+                firstNameGood = false;
+            }
+        } else {
+            firstNameGood = true;
+            shouldEnable();
+            System.out.println("FirstNameGood");
+        }
+    }
+
+    public void onLastNameUpdated(String newText) {
+        Pattern p = Pattern.compile("\\w{2,25}");
+        boolean tOne = newText.matches("\\w{2,25}");
+        //System.out.println(newText + " is valid:" + tOne);
+        if (!tOne) {
+            //shoutBox.getChildren().add(new Label("Name must be 2-25 characters long"));
+            if (!this.addBtn.isDisabled()) {
+                addBtn.setDisable(true);
+                lastNameGood = false;
+            }
+        } else {
+            lastNameGood = true;
+            shouldEnable();
+            System.out.println("LastNameGood");
+        }
+    }
+
+    public void onEmailUpdated(String newText) {
+        Pattern p = Pattern.compile("\\w{2,25}");
+        boolean tOne = newText.matches("\\w{2,25}");
+        //System.out.println(newText + " is valid:" + tOne);
+        if (!tOne) {
+            //shoutBox.getChildren().add(new Label("Name must be 2-25 characters long"));
+            if (!this.addBtn.isDisabled()) {
+                addBtn.setDisable(true);
+                emailGood = false;
+            }
+        } else {
+            emailGood = true;
+            shouldEnable();
+            System.out.println("EmailGood");
+        }
+    }
+
+    public void onImageURLUpdated(String newText) {
+        Pattern p = Pattern.compile("\\w{2,25}");
+        boolean tOne = newText.matches("\\w{2,25}");
+        //System.out.println(newText + " is valid:" + tOne);
+        if (!tOne) {
+            //shoutBox.getChildren().add(new Label("Name must be 2-25 characters long"));
+            if (!this.addBtn.isDisabled()) {
+                addBtn.setDisable(true);
+                imageURLGood = false;
+            }
+        } else {
+            imageURLGood = true;
+            shouldEnable();
+            System.out.println("ImageURLGood");
         }
     }
 
@@ -92,7 +187,7 @@ public class DB_GUI_Controller implements Initializable {
         String privies = curUser.getPrivileges();
         System.out.println(privies);
         Pattern p = Pattern.compile("all");
-        boolean tAll = privies.matches("all");
+        boolean tAll = privies.equals("all");
         System.out.println(tAll);
 
         boolean tOne = curUser.getPrivileges().matches("rw");
@@ -114,70 +209,88 @@ public class DB_GUI_Controller implements Initializable {
                             }
                         }
                     });
-        }
-        else{
+        } else {
             System.out.println("Warning! No Edit or Delete privileges");
             shoutBox.getChildren().add(new Label("Warning! No Edit or Delete privileges"));
         }
-        if (curUser.getTheme()){lightTheme();} else {darkTheme();}
+        if (curUser.getTheme()) {
+            lightTheme();
+        } else {
+            darkTheme();
+        }
     }
 
     @FXML
     protected boolean addNewRecord() {
 
-            boolean failAdd = false;
-            Pattern pat = Pattern.compile("\\w{2,25}");
-            if (!first_name.getText().matches("\\w{2,25}")){
-                shoutBox.getChildren().add(new Label("Name must be 2-25 characters long"));
-                failAdd = true;
-            }
-            if (!last_name.getText().matches("\\w{2,25}")){
-                shoutBox.getChildren().add(new Label("Name must be 2-25 characters long"));
-                failAdd = true;
-            }
-            if (!email.getText().matches("[a-zA-Z]{3,15}@[a-z][.][.com|.edu]")){
-                shoutBox.getChildren().add(new Label("Email must be a valid email address"));
-                failAdd = true;
-            }
+        boolean failAdd = false;
+        Pattern pat = Pattern.compile("\\w{2,25}");
+        if (!first_name.getText().matches("\\w{2,25}")) {
+            shoutBox.getChildren().add(new Label("Name must be 2-25 characters long"));
+            failAdd = true;
+        }
+        if (!last_name.getText().matches("\\w{2,25}")) {
+            shoutBox.getChildren().add(new Label("Name must be 2-25 characters long"));
+            failAdd = true;
+        }
+        if (!email.getText().matches("[a-zA-Z]{3,15}@[a-z][.][.com|.edu]")) {
+            shoutBox.getChildren().add(new Label("Email must be a valid email address"));
+            failAdd = true;
+        }
+        if (major.getValue().equals("Major")) {
+            shoutBox.getChildren().add(new Label("Must have a major"));
+            failAdd = true;
+        }
+        if (department.getValue().equals("Department")) {
+            shoutBox.getChildren().add(new Label("Must have a department"));
+            failAdd = true;
+        }
+        if (!imageURL.getText().matches("(https?:\\/\\/.*\\.(?:png|jpg))")) {
+            shoutBox.getChildren().add(new Label("Must have a valid image url"));
+            failAdd = true;
+        }
 
-            if (failAdd){
-                return failAdd;
-            }
-            Person p = new Person(first_name.getText(), last_name.getText(), (String) department.getValue(),
-                    (String) major.getValue(), email.getText(), imageURL.getText());
-            cnUtil.insertUser(p);
-            cnUtil.retrieveId(p);
-            p.setId(cnUtil.retrieveId(p));
-            data.add(p);
+        if (failAdd) {
+            return failAdd;
+        }
+        Person p = new Person(first_name.getText(), last_name.getText(), (String) department.getValue(),
+                (String) major.getValue(), email.getText(), imageURL.getText());
+        cnUtil.insertUser(p);
+        cnUtil.retrieveId(p);
+        p.setId(cnUtil.retrieveId(p));
+        data.add(p);
 
-            clearForm();
-            shoutBox.getChildren().add(new Label("Record added successfully"));
-            return true;
+        clearForm();
+        shoutBox.getChildren().add(new Label("Record added successfully"));
+        return true;
     }
 
-    public void showImage(){
+    public void showImage() {
         File file = (new FileChooser()).showOpenDialog(menuBar.getScene().getWindow());
-                if (file != null){
-                    img_view.setImage(new Image(file.toURI().toString()));
-                    Task<Void> uploadTask = createUploadTask(file, progressBar);
-                    progressBar.progressProperty().bind(uploadTask.progressProperty());
-                    new Thread(uploadTask).start();
-                }
+        if (file != null) {
+            img_view.setImage(new Image(file.toURI().toString()));
+            Task<Void> uploadTask = createUploadTask(file, progressBar);
+            progressBar.progressProperty().bind(uploadTask.progressProperty());
+            new Thread(uploadTask).start();
+        }
     }
 
     @FXML
     protected void clearForm() {
         first_name.setText("");
         last_name.setText("");
-        department.setValue("department");
-        major.setValue("major");
+        department.setValue("Department");
+        major.setValue("Major");
         email.setText("");
         imageURL.setText("");
     }
 
+    //Clears the usersession, as you are no longer logged in, and clears the form to prevent.
     @FXML
     protected void logOut(ActionEvent actionEvent) {
         try {
+            UserSession.getInstance("n/a", "n/a").cleanUserSession();
+            clearWholeTable();
             Parent root = FXMLLoader.load(getClass().getResource("/view/login.fxml"));
             Scene scene = new Scene(root, 900, 600);
             scene.getStylesheets().add(getClass().getResource("/css/lightTheme.css").getFile());
@@ -191,6 +304,7 @@ public class DB_GUI_Controller implements Initializable {
 
     @FXML
     protected void closeApplication() {
+
         System.exit(0);
     }
 
@@ -207,28 +321,83 @@ public class DB_GUI_Controller implements Initializable {
         }
     }
 
-    //Utilize a stream to .joining each element together and write the result into a csv file
+    //Writes the data in the table to a csv file and saves it.
     @FXML
-    protected void exportAsCSV(){
+    protected void exportAsCSV() throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save CSV File");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("CSV Files", "*.csv")
         );
         File f = fileChooser.showSaveDialog(menuBar.getScene().getWindow());
-
+        if (f == null) {
+            System.out.println("File save canceled.");
+            return; // Exit if no file is chosen
+        }
         System.out.println(tv.getItems());
-        for (Person p: tv.getItems()){
-            String line = p.getId() + "," + p.getFirstName() + "," + p.getLastName() + ",";
 
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(f))) {
+            for (Person p : tv.getItems()) {
+                String line = p.getId() + "," + p.getFirstName() + "," + p.getLastName() + ",";
+                System.out.println(line);
+                writer.write(line);
+                writer.newLine();
+
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
+
+    //Create an observable list with person data type out of a CSV file.
+    @FXML
+    protected void importCSV() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open CSV File");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("CSV Files", "*.csv")
+        );
+        File f = fileChooser.showOpenDialog(menuBar.getScene().getWindow());
+
+        if (f == null) {
+            System.out.println("No file selected.");
+            return;
+        }
+        data.clear();
+        tv.setItems(data);
+        // Read and parse the file
+        try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(","); // Split line into parts based on commas
+                if (parts.length == 7) { // Ensure there are exactly 6 columns
+                    int id = Integer.parseInt(parts[0].trim());
+                    String firstName = parts[1].trim();
+                    String lastName = parts[2].trim();
+                    String department = parts[3].trim();
+                    String major = parts[4].trim();
+                    String email = parts[5].trim();
+                    String imageURL = parts[6].trim();
+                    // Create a new Person object and add it to the TableView
+                    Person person = new Person(id, firstName, lastName, department, major, email, imageURL);
+                    tv.getItems().add(person);
+                } else {
+                    System.err.println("Skipping malformed line: " + line);
+                }
+            }
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();
+            System.err.println("Error reading the file: " + e.getMessage());
+        }
+    }
+
+    //Edits a record by changing the record provided.
     @FXML
     protected void editRecord() {
         Person p = tv.getSelectionModel().getSelectedItem();
         int index = data.indexOf(p);
-        Person p2 = new Person(index + 1, first_name.getText(), last_name.getText(), (String) department.getSelectedItem(),
-                (String) major.getSelectedItem(), email.getText(),  imageURL.getText());
+        Person p2 = new Person(index + 1, first_name.getText(), last_name.getText(), (String) department.getValue(),
+                (String) major.getValue(), email.getText(), imageURL.getText());
         cnUtil.editUser(p.getId(), p2);
         data.remove(p);
         data.add(index, p2);
@@ -236,6 +405,7 @@ public class DB_GUI_Controller implements Initializable {
         shoutBox.getChildren().add(new Label("Record edited successfully"));
     }
 
+    //Removes a record from the table.
     @FXML
     protected void deleteRecord() {
         Person p = tv.getSelectionModel().getSelectedItem();
@@ -246,13 +416,6 @@ public class DB_GUI_Controller implements Initializable {
         shoutBox.getChildren().add(new Label("Record deleted successfully"));
     }
 
-    @FXML
-    protected void showImage() {
-        File file = (new FileChooser()).showOpenDialog(img_view.getScene().getWindow());
-        if (file != null) {
-            img_view.setImage(new Image(file.toURI().toString()));
-        }
-    }
 
     @FXML
     protected void addRecord() {
@@ -264,8 +427,8 @@ public class DB_GUI_Controller implements Initializable {
         Person p = tv.getSelectionModel().getSelectedItem();
         first_name.setText(p.getFirstName());
         last_name.setText(p.getLastName());
-        department.setSelectedItem(p.getDepartment());
-        major.setSelectedItem(p.getMajor());
+        department.setValue(p.getDepartment());
+        major.setValue(p.getMajor());
         email.setText(p.getEmail());
         imageURL.setText(p.getImageURL());
     }
@@ -306,7 +469,7 @@ public class DB_GUI_Controller implements Initializable {
                 FXCollections.observableArrayList(Major.values());
         ComboBox<Major> comboBox = new ComboBox<>(options);
         comboBox.getSelectionModel().selectFirst();
-        dialogPane.setContent(new VBox(8, textField1, textField2,textField3, comboBox));
+        dialogPane.setContent(new VBox(8, textField1, textField2, textField3, comboBox));
         Platform.runLater(textField1::requestFocus);
         dialog.setResultConverter((ButtonType button) -> {
             if (button == ButtonType.OK) {
@@ -322,6 +485,13 @@ public class DB_GUI_Controller implements Initializable {
         });
     }
 
+    //Mostly for fxml function call. Will clear the form and data.
+    public void clearWholeTable() {
+        tv.getItems().clear();
+        data.clear();
+    }
+
+    //Creates an upload task and tries to upload to the database, an image.
     private Task<Void> createUploadTask(File file, ProgressBar progressBar) {
         return new Task<>() {
             @Override
@@ -344,6 +514,7 @@ public class DB_GUI_Controller implements Initializable {
                         int progress = (int) ((double) uploadedBytes / fileSize * 100);
                         updateProgress(progress, 100);
                     }
+                    imageURL.setText(file.toURI().toString());
                 }
 
                 return null;
@@ -351,18 +522,51 @@ public class DB_GUI_Controller implements Initializable {
         };
     }
 
-    private static enum Major {Business, CSC, CPIS}
+    //Enums with major and departments defined.
+    private static enum Major {
+        Business("Business"),
+        CSC("CSC"),
+        CPIS("CPIS"),
+        EGL("English");
 
-    private static class Results {
+        private final String major;
+        Major(String privilege) {
+            this.major = privilege;
+        }
+
+        @Override
+        public String toString() {
+            return major; // Controls how the enum appears in the ChoiceBox
+        }
+    }
+
+    private static enum Department {
+        Business("Business"),
+        CSC("CSC"),
+        CPIS("CPIS"),
+        EGL("English");
+
+        private final String department;
+        Department(String privilege) {
+            this.department = privilege;
+        }
+
+        @Override
+        public String toString() {
+            return department; // Controls how the enum appears in the ChoiceBox
+        }
+    }
+
+    public static class Results {
 
         String fname;
         String lname;
         Major major;
 
-        public Results(String name, String date, Major venue) {
+        public Results(String name, String date, Major major) {
             this.fname = name;
             this.lname = date;
-            this.major = venue;
+            this.major = major;
         }
     }
 

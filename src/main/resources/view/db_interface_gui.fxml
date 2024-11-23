@@ -18,6 +18,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
 <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="593.0" prefWidth="905.0" styleClass="anchor_pane" stylesheets="@../css/lightTheme.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewmodel.DB_GUI_Controller">
     <children>
         <BorderPane fx:id="borderPane" layoutX="-2.0" layoutY="-3.0" prefHeight="597.0" prefWidth="908.0">
@@ -27,8 +29,10 @@
                         <Menu mnemonicParsing="false" styleClass="menu_options" text="File">
                             <items>
                                 <MenuItem fx:id="newItem" mnemonicParsing="false" onAction="#addRecord" styleClass="menu_items" text="New" />
+                                <MenuItem fx:id="newTable" mnemonicParsing="false" onAction="#clearWholeTable" styleClass="menu_items" text="New Form"/>
                                 <MenuItem fx:id="ChangePic" mnemonicParsing="false" onAction="#showImage" styleClass="menu_items" text="Change Pic" />
                                 <MenuItem fx:id="exportCSV" mnemonicParsing="false" onAction="#exportAsCSV" text="Export" />
+                                <MenuItem fx:id="importCSV" mnemonicParsing="false" onAction="#importCSV" text="Import" />
                                 <MenuItem fx:id="logOut" mnemonicParsing="false" onAction="#logOut" styleClass="menu_items" text="Log out" />
                                 <MenuItem fx:id="closeApp" mnemonicParsing="false" onAction="#closeApplication" styleClass="menu_items" text="Exit Program" />
                             </items>
@@ -70,8 +74,7 @@
                         </AnchorPane>
                   <VBox fx:id="shoutBox" alignment="BOTTOM_LEFT" prefHeight="324.0" prefWidth="130.0" styleClass="shoutBox">
                      <children>
-                        <ChoiceBox prefWidth="150.0" />
-                        <ProgressBar prefWidth="200.0" progress="0.0" />
+                        <ProgressBar fx:id="progressBar" prefWidth="200.0" progress="0.0" />
                      </children></VBox>
                     </children>
                 </VBox>
@@ -97,7 +100,7 @@
                         <Insets />
                      </VBox.margin>
                      <children>
-                        <ChoiceBox prefWidth="150.0" />
+                        <ChoiceBox fx:id="department" prefWidth="150.0" />
                         <ChoiceBox fx:id="major" prefWidth="150.0" />
                      </children>
                   </VBox>
@@ -121,7 +124,7 @@
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                             </VBox.margin>
                         </Button>
-                        <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addNewRecord" styleClass="db_btn" text="Add">
+                        <Button fx:id="addBtn" disable="true" mnemonicParsing="false" onAction="#addNewRecord" styleClass="db_btn" text="Add">
                             <VBox.margin>
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                             </VBox.margin>
@@ -131,7 +134,7 @@
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                             </VBox.margin>
                         </Button>
-                        <Button fx:id="edtBtn" disable="false" mnemonicParsing="false" onAction="#editRecord" styleClass="db_btn" text="Edit">
+                        <Button fx:id="edtBtn" disable="true" mnemonicParsing="false" onAction="#editRecord" styleClass="db_btn" text="Edit">
                             <VBox.margin>
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                             </VBox.margin>

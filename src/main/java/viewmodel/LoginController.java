@@ -9,6 +9,8 @@ import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -26,6 +28,15 @@ public class LoginController {
 
     @FXML
     private TextField usernameTextField;
+
+    @FXML
+    private PasswordField passwordField;
+
+    @FXML
+    private Label userNotFound;
+
+    @FXML
+    private Label passNotFound;
 
     @FXML
     private GridPane rootpane;
@@ -55,9 +66,27 @@ public class LoginController {
                 new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, false, true));
     }
     @FXML
-    public void login(ActionEvent actionEvent) {
+    public boolean login(ActionEvent actionEvent) {
         DbConnectivityClass instance = DbConnectivityClass.getInstance();
         HashMap<String, Client> clients = instance.getClientData();
+        if (clients.containsKey(usernameTextField.getText())){
+            //System.out.println("This is a user in the database");
+            System.out.println(clients.get(usernameTextField.getText()));
+            System.out.println(clients.get(usernameTextField.getText()).getPassword());
+
+            if (clients.get(usernameTextField.getText()).getPassword().equals(passwordField.getText())){
+                //System.out.println("Pass matches this record");
+
+            }
+            else{
+                passNotFound.setVisible(true);
+                return false;
+            }
+        }
+        else{
+            userNotFound.setVisible(true);
+            return false;
+        }
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/view/db_interface_gui.fxml"));
             Scene scene = new Scene(root, 900, 600);
@@ -65,9 +94,11 @@ public class LoginController {
             Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             window.setScene(scene);
             window.show();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     public void signUp(ActionEvent actionEvent) {

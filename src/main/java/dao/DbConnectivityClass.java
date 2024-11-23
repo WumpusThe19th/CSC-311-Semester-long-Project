@@ -62,10 +62,11 @@ public class DbConnectivityClass {
         }
 
         public HashMap<String, Client> getClientData(){
+            System.out.println("getClientData");
             connectToDatabase();
                 try {
             Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
-            String sql = "SELECT * FROM users ";
+            String sql = "SELECT * FROM clients ";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (!resultSet.isBeforeFirst()) {
@@ -73,9 +74,13 @@ public class DbConnectivityClass {
             }
             while (resultSet.next()) {
                 String username = resultSet.getString("username");
+                System.out.println(username);
                 String password = resultSet.getString("password");
+                System.out.println(password);
                 String privileges = resultSet.getString("privileges");
-                boolean lightTheme = resultSet.getBoolean("lightTheme");
+                System.out.println(privileges);
+                boolean lightTheme = resultSet.getBoolean("lighttheme");
+                System.out.println(lightTheme);
                 clients.put(username, new Client(username, password, privileges, lightTheme));
             }
             preparedStatement.close();
@@ -117,9 +122,12 @@ public class DbConnectivityClass {
 
                 statement = conn.createStatement();
                 String sql2 = "CREATE TABLE IF NOT EXISTS clients (" +
-                         "username VARCHAR(200) NOT NULL," + "password VARCHAR(200) NOT NULL," + "privileges VARCHAR(200) NOT NULL)";
+                         "username VARCHAR(200) NOT NULL," + "password VARCHAR(200) NOT NULL," + "privileges VARCHAR(200) NOT NULL," + "lighttheme BOOLEAN NOT NULL)";
                 statement.executeUpdate(sql2);
-
+                //statement = conn.createStatement();
+                //String sqlImSoSorryIForgot = "ALTER TABLE clients ADD COLUMN lighttheme BOOLEAN;";
+                //statement.executeUpdate(sqlImSoSorryIForgot);
+                //System.out.println("Something");
                 //check if we have users in the table users
                 statement = conn.createStatement();
                 ResultSet resultSet2 = statement.executeQuery("SELECT COUNT(*) FROM clients");
@@ -137,8 +145,21 @@ public class DbConnectivityClass {
                         hasRegistredClients = true;
                     }
                 }
+                String dsql = "DESCRIBE clients";
+                PreparedStatement pStatement = conn.prepareStatement(dsql);
+                ResultSet rs = pStatement.executeQuery(dsql);
+                while (rs.next()) {
+                    String field = rs.getString("Field");
+                    String type = rs.getString("Type");
+                    String isNullable = rs.getString("Null");
+                    String key = rs.getString("Key");
+                    String defaultValue = rs.getString("Default");
+                    String extra = rs.getString("Extra");
 
-                System.out.println(hasRegistredClients);
+                    System.out.printf("%s\t%s\t%s\t%s\t%s\t%s%n",
+                            field, type, isNullable, key, defaultValue, extra);
+                }
+                //System.out.println(hasRegistredClients);
                 statement.close();
                 conn.close();
 
@@ -248,25 +269,33 @@ public class DbConnectivityClass {
             }
         }
 
-    public void insertClient(UserSession user) {
+    public boolean insertClient(Client user) {
         connectToDatabase();
         try {
+            System.out.println("We are trying to add your client");
             Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
-            String sql = "INSERT INTO clients (username, password, privileges, theme) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO clients (username, password, privileges, lighttheme) VALUES (?, ?, ?, ?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, user.getUserName());
+            preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getPrivileges());
-            preparedStatement.setString(4, String.valueOf(user.getTheme()));
+            System.out.println(String.valueOf(user.isLightTheme()));
+            preparedStatement.setBoolean(4, true);
+
             int row = preparedStatement.executeUpdate();
-            if (row > 0) {
-                lg.makeLog("A new client was inserted successfully.");
-            }
+            System.out.println("We are trying");
+
             preparedStatement.close();
             conn.close();
+            if (row > 0) {
+                lg.makeLog("A new client was inserted successfully.");
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
+        return false;
     }
 
         public void editUser(int id, Person p) {
