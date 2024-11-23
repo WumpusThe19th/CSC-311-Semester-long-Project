@@ -4,6 +4,8 @@ import com.azure.storage.blob.BlobClient;
 import dao.DbConnectivityClass;
 import dao.StorageUploader;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -12,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -56,6 +59,8 @@ public class DB_GUI_Controller implements Initializable {
     @FXML
     private TableColumn<Person, String> tv_fn, tv_ln, tv_department, tv_major, tv_email;
     @FXML
+    private Tooltip imageURLPopUp;
+    @FXML
     private VBox shoutBox;
     private final DbConnectivityClass cnUtil = DbConnectivityClass.getInstance();
     private final ObservableList<Person> data = cnUtil.getUserData();
@@ -68,6 +73,7 @@ public class DB_GUI_Controller implements Initializable {
     Button addBtn;
     @FXML
     AnchorPane anchorPane;
+    private Node stage;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -93,8 +99,34 @@ public class DB_GUI_Controller implements Initializable {
             email.textProperty().addListener((observable, oldValue, newValue) -> {
                 onEmailUpdated(newValue);
             });
-            imageURL.textProperty().addListener((observable, oldValue, newValue) -> {
-                onImageURLUpdated(newValue);
+            imageURL.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
+                imageURLPopUp.show(stage, e.getScreenX(), e.getScreenY());
+            });
+            major.valueProperty().addListener(new ChangeListener<String>() {
+              @Override
+              public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                  if (newValue.equals("Department")){
+                      addBtn.setDisable(true);
+                      //majorGood = false;
+                  }
+                  else{
+                      //majorGood = true;
+                      shouldEnable();
+                  }
+              }
+          });
+            department.valueProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    if (newValue.equals("Department")){
+                        addBtn.setDisable(true);
+                        //departmentGood = false;
+                    }
+                    else{
+                        //departmentGood = true;
+                        shouldEnable();
+                    }
+                }
             });
 
         } catch (Exception e) {
@@ -106,9 +138,11 @@ public class DB_GUI_Controller implements Initializable {
     boolean lastNameGood = false;
     boolean emailGood = false;
     boolean imageURLGood = false;
+    //boolean majorGood = false;
+    //boolean departmentGood = false;
 
     private void shouldEnable() {
-        if (firstNameGood && lastNameGood && emailGood && imageURLGood) {
+        if (firstNameGood && lastNameGood && emailGood) {
             addBtn.setDisable(false);
         }
     }
@@ -226,27 +260,33 @@ public class DB_GUI_Controller implements Initializable {
         boolean failAdd = false;
         Pattern pat = Pattern.compile("\\w{2,25}");
         if (!first_name.getText().matches("\\w{2,25}")) {
-            shoutBox.getChildren().add(new Label("Name must be 2-25 characters long"));
+            Label lbl = new Label("Name must be 2-25 characters long");
+            lbl.setWrapText(true);
+            shoutBox.getChildren().add(lbl);
             failAdd = true;
         }
         if (!last_name.getText().matches("\\w{2,25}")) {
-            shoutBox.getChildren().add(new Label("Name must be 2-25 characters long"));
+            Label lbl = new Label("Name must be 2-25 characters long");
+            lbl.setWrapText(true);
+            shoutBox.getChildren().add(lbl);
             failAdd = true;
         }
         if (!email.getText().matches("[a-zA-Z]{3,15}@[a-z][.][.com|.edu]")) {
-            shoutBox.getChildren().add(new Label("Email must be a valid email address"));
+            Label lbl = new Label("Email must be a valid email address");
+            lbl.setWrapText(true);
+            shoutBox.getChildren().add(lbl);
             failAdd = true;
         }
         if (major.getValue().equals("Major")) {
-            shoutBox.getChildren().add(new Label("Must have a major"));
+            Label lbl = new Label("Must have a department");
+            lbl.setWrapText(true);
+            shoutBox.getChildren().add(lbl);
             failAdd = true;
         }
         if (department.getValue().equals("Department")) {
-            shoutBox.getChildren().add(new Label("Must have a department"));
-            failAdd = true;
-        }
-        if (!imageURL.getText().matches("(https?:\\/\\/.*\\.(?:png|jpg))")) {
-            shoutBox.getChildren().add(new Label("Must have a valid image url"));
+            Label lbl = new Label("Must have a department");
+            lbl.setWrapText(true);
+            shoutBox.getChildren().add(lbl);
             failAdd = true;
         }
 

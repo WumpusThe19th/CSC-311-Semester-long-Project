@@ -56,7 +56,13 @@ public class SignUpController {
         DbConnectivityClass cnUtil = DbConnectivityClass.getInstance();
         String userName = registerUserName.getText();
         String passWord = registerPassword.getText();
-        String privileges = (String) registerPrivileges.getValue();
+        String privileges;
+        if (adminCode.equals(adminCodeString)){
+            privileges = "all";
+        }
+        else {
+            privileges = (String) registerPrivileges.getValue();
+        }
         //String privileges = "all";
         System.out.println(privileges);
         Client curClient = new Client(userName, passWord, privileges, true);

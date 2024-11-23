@@ -13,10 +13,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="rootpane" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1100.0" styleClass="grid_pane" stylesheets="@../../../../../CSC-311-Semester-long-Project/src/main/resources/css/login.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewmodel.LoginController">
+<GridPane fx:id="rootpane" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1100.0" styleClass="grid_pane" stylesheets="@../css/login.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewmodel.LoginController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="253.0" minWidth="10.0" prefWidth="165.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="401.0" minWidth="10.0" prefWidth="210.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="401.0" minWidth="10.0" prefWidth="299.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="401.0" minWidth="10.0" prefWidth="53.0" />
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="461.0" minWidth="10.0" prefWidth="77.0" />
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="503.0" minWidth="10.0" prefWidth="503.0" />
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.0" minWidth="10.0" prefWidth="139.99992675781255" />
@@ -30,11 +31,12 @@
         <RowConstraints maxHeight="284.0000122070312" minHeight="10.0" prefHeight="85.0" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="277.0" minHeight="0.0" prefHeight="50.0" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="277.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="277.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="277.0" minHeight="10.0" prefHeight="49.000048828125045" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-      <Pane prefHeight="239.0" prefWidth="364.0" styleClass="loginPane" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.rowSpan="4" />
-        <HBox alignment="CENTER" prefHeight="103.0" prefWidth="811.0" GridPane.columnSpan="5">
+      <Pane prefHeight="239.0" prefWidth="364.0" styleClass="loginPane" GridPane.columnSpan="3" GridPane.rowIndex="3" GridPane.rowSpan="5" />
+        <HBox alignment="CENTER" prefHeight="103.0" prefWidth="811.0" GridPane.columnSpan="6">
             <GridPane.margin>
                 <Insets />
             </GridPane.margin>
@@ -51,7 +53,7 @@
                 <TextField id="emailTextField" fx:id="usernameTextField" prefHeight="28.0" prefWidth="203.0" promptText="email_id@domain.edu" style="-fx-border-color: BLACK;" styleClass="login_text_field" />
          </children>
         </VBox>
-        <VBox alignment="CENTER" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3">
+        <VBox alignment="CENTER" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="3">
          <children>
             <Label fx:id="userNotFound" prefHeight="17.0" prefWidth="566.0" text="Username does not match our records!" textFill="RED" visible="false" />
          </children></VBox>
@@ -60,17 +62,17 @@
                 <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="27.0" prefWidth="203.0" style="-fx-border-color: BLACK;" styleClass="login_password_field" />
          </children>
         </VBox>
-        <VBox alignment="CENTER" prefHeight="601.0" prefWidth="723.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4">
+        <VBox alignment="CENTER" prefHeight="601.0" prefWidth="723.0" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="4">
          <children>
             <Label fx:id="passNotFound" prefHeight="17.0" prefWidth="561.0" text="Password does not match our records!" textFill="RED" visible="false" />
          </children></VBox>
-        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="5">
+        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="5">
             <children>
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" />
             </children>
         </VBox>
-        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="6" />
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="4" />
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="6" />
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="5" />
           <Label id="emailLabel" fx:id="usernameLabel" alignment="TOP_CENTER" contentDisplay="TOP" focusTraversable="false" prefHeight="23.0" prefWidth="156.0" styleClass="login_label" text="Username" textAlignment="RIGHT" GridPane.rowIndex="3">
               <font>
                   <Font name="System Bold" size="18.0" />
@@ -81,12 +83,12 @@
                   <Font name="System Bold" size="18.0" />
               </font>
           </Label>
-          <Button fx:id="loginBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#login" prefHeight="40.0" prefWidth="208.0" style="-fx-background-color: Green; -fx-border-color: BLACK;" styleClass="login_button" text="Login" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="5">
+          <Button fx:id="loginBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#login" prefHeight="40.0" prefWidth="208.0" style="-fx-background-color: Green; -fx-border-color: BLACK;" styleClass="login_button" text="Login" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
               <font>
                   <Font name="System Bold" size="18.0" />
               </font>
           </Button>
-            <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#signUp" prefHeight="40.0" prefWidth="210.0" style="-fx-background-color: RED; -fx-border-color: BLACK;" styleClass="login_button" text="Sign Up" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="6">
+            <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#signUp" prefHeight="40.0" prefWidth="210.0" style="-fx-background-color: RED; -fx-border-color: BLACK;" styleClass="login_button" text="Sign Up" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6">
                 <font>
                     <Font name="System Bold" size="15.0" />
                 </font>

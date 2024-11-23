@@ -19,10 +19,12 @@
 <GridPane alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1100.0" styleClass="greaterPane" stylesheets="@../css/signUp.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewmodel.SignUpController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="460.0" minWidth="10.0" prefWidth="162.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="460.0" minWidth="10.0" prefWidth="196.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="466.0" minWidth="10.0" prefWidth="191.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="666.0" minWidth="10.0" prefWidth="170.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="551.0" minWidth="10.0" prefWidth="195.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="460.0" minWidth="10.0" prefWidth="198.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="466.0" minWidth="10.0" prefWidth="43.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="466.0" minWidth="10.0" prefWidth="162.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="666.0" minWidth="10.0" prefWidth="147.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="666.0" minWidth="10.0" prefWidth="43.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="551.0" minWidth="10.0" prefWidth="206.0" />
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="252.0" minWidth="0.0" prefWidth="184.0" />
     </columnConstraints>
     <rowConstraints>
@@ -39,13 +41,13 @@
         <RowConstraints maxHeight="335.1999877929687" minHeight="10.0" prefHeight="64.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-      <Pane prefHeight="200.0" prefWidth="200.0" styleClass="signUpPane" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.rowSpan="6" />
-      <PasswordField fx:id="registerPassword" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="327.0" style="-fx-focus-traversable: true;" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
-      <TextField fx:id="registerUserName" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="327.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+      <Pane prefHeight="200.0" prefWidth="200.0" styleClass="signUpPane" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="4" GridPane.rowSpan="6" />
+      <PasswordField fx:id="registerPassword" prefHeight="35.0" prefWidth="330.0" style="-fx-focus-traversable: true;" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
+      <TextField fx:id="registerUserName" prefHeight="35.0" prefWidth="330.0" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
          <font>
             <Font size="15.0" />
          </font></TextField>
-        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="6" GridPane.rowIndex="1">
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="8" GridPane.rowIndex="1">
             <children>
                 <Label alignment="CENTER" focusTraversable="false" prefHeight="74.0" prefWidth="1099.0" style="-fx-border-color: BLACK; -fx-background-color: WHITE;" text="Sign Up New User Account">
                     <font>
@@ -55,28 +57,27 @@
             </children>
         </HBox>
         <VBox alignment="CENTER_RIGHT" fillWidth="false" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-        <VBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+        <VBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="3" />
         <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
         <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
         <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-        <VBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="6" />
+        <VBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="6" />
         <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
         <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-        <VBox alignment="CENTER" prefHeight="145.0" prefWidth="191.0" spacing="25.0" GridPane.columnIndex="2" GridPane.rowIndex="8">
+        <VBox alignment="CENTER" prefHeight="145.0" prefWidth="191.0" spacing="25.0" GridPane.columnIndex="3" GridPane.rowIndex="8">
          <children>
              <ComboBox fx:id="myComboBox" promptText="Privileges">
                  <items>
                      <FXCollections fx:factory="observableArrayList">
-                         <String fx:value="All" />
                          <String fx:value="Read/Write" />
-                         <String fx:value="None" />
                          <String fx:value="Import/Export" />
+                         <String fx:value="None" />
                      </FXCollections>
                  </items>
              </ComboBox>
             <TextField fx:id="adminCode" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="121.0" promptText="admin code" />
          </children></VBox>
-        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9">
+        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="9">
             <children>
                 <Button fx:id="newAccountBtn" mnemonicParsing="false" onAction="#createNewAccount" prefHeight="43.0" prefWidth="199.0" style="-fx-background-color: GREY; -fx-border-color: BLACK;" text="Create New Account" textAlignment="CENTER" textFill="WHITE">
                     <VBox.margin>
@@ -96,17 +97,17 @@
                 </Button>
             </children>
         </VBox>
-        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="7" GridPane.rowSpan="2" />
-        <VBox alignment="BOTTOM_CENTER" prefHeight="280.0" prefWidth="298.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="9">
+        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="6" GridPane.rowIndex="7" GridPane.rowSpan="2" />
+        <VBox alignment="BOTTOM_CENTER" prefHeight="280.0" prefWidth="298.0" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="9">
             <opaqueInsets>
                 <Insets />
             </opaqueInsets>
         </VBox>
-      <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="153.0" text="USERNAME" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+      <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="153.0" text="USERNAME" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
          <font>
             <Font size="15.0" />
          </font></Label>
-      <Label prefHeight="17.0" prefWidth="156.0" text="PASSWORD" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
+      <Label prefHeight="17.0" prefWidth="156.0" text="PASSWORD" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
          <font>
             <Font size="15.0" />
          </font></Label>

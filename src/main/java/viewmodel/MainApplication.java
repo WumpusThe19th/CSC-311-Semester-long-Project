@@ -35,6 +35,7 @@ public class MainApplication extends Application {
         showScene1();
     }
 
+    //If fade, boot to the log in. Otherwise, boot to the interface.
     private void showScene1() {
         try {
             if (skipFade) {
@@ -58,6 +59,7 @@ public class MainApplication extends Application {
         }
     }
 
+    //Change to login. Finish the fade.
     public void changeScene() {
         try {
             Parent newRoot = FXMLLoader.load(getClass().getResource("/view/login.fxml").toURI().toURL());

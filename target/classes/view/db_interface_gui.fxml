@@ -11,6 +11,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -18,9 +19,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<?import java.lang.String?>
-<?import javafx.collections.FXCollections?>
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="593.0" prefWidth="905.0" styleClass="anchor_pane" stylesheets="@../css/lightTheme.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewmodel.DB_GUI_Controller">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="593.0" prefWidth="905.0" styleClass="anchor_pane" stylesheets="@../css/lightTheme.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewmodel.DB_GUI_Controller">
     <children>
         <BorderPane fx:id="borderPane" layoutX="-2.0" layoutY="-3.0" prefHeight="597.0" prefWidth="908.0">
             <top>
@@ -29,7 +28,7 @@
                         <Menu mnemonicParsing="false" styleClass="menu_options" text="File">
                             <items>
                                 <MenuItem fx:id="newItem" mnemonicParsing="false" onAction="#addRecord" styleClass="menu_items" text="New" />
-                                <MenuItem fx:id="newTable" mnemonicParsing="false" onAction="#clearWholeTable" styleClass="menu_items" text="New Form"/>
+                                <MenuItem fx:id="newTable" mnemonicParsing="false" onAction="#clearWholeTable" styleClass="menu_items" text="New Form" />
                                 <MenuItem fx:id="ChangePic" mnemonicParsing="false" onAction="#showImage" styleClass="menu_items" text="Change Pic" />
                                 <MenuItem fx:id="exportCSV" mnemonicParsing="false" onAction="#exportAsCSV" text="Export" />
                                 <MenuItem fx:id="importCSV" mnemonicParsing="false" onAction="#importCSV" text="Import" />
@@ -72,10 +71,8 @@
                                 </ImageView>
                             </children>
                         </AnchorPane>
-                  <VBox fx:id="shoutBox" alignment="BOTTOM_LEFT" prefHeight="324.0" prefWidth="130.0" styleClass="shoutBox">
-                     <children>
-                        <ProgressBar fx:id="progressBar" prefWidth="200.0" progress="0.0" />
-                     </children></VBox>
+                  <VBox fx:id="shoutBox" alignment="BOTTOM_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="303.0" prefWidth="130.0" styleClass="shoutBox" VBox.vgrow="SOMETIMES" />
+                  <ProgressBar fx:id="progressBar" prefWidth="200.0" progress="0.0" />
                     </children>
                 </VBox>
             </left>
@@ -113,6 +110,9 @@
                             <VBox.margin>
                                 <Insets left="10.0" right="10.0" top="5.0" />
                             </VBox.margin>
+                     <tooltip>
+                        <Tooltip fx:id="imageURLPopUp" text="Click on the image on the left side of the screen to upload an image" wrapText="true" />
+                     </tooltip>
                         </TextField>
                   <Label prefHeight="6.0" prefWidth="3.0" text=" ">
                      <VBox.margin>
