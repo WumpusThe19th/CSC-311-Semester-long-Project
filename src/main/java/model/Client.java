@@ -1,11 +1,13 @@
 package model;
 
 public class Client {
-    public Client(String userName, String passEord, String privd, boolean light) {
+    public Client(String userName, String passEord, String privd, boolean light, boolean curUser) {
         username = userName;
         password = passEord;
         privileges = privd;
         lightTheme = light;
+        isCurrentUser = curUser;
+
     }
 
     public String getUsername() {
@@ -40,8 +42,16 @@ public class Client {
         this.lightTheme = lightTheme;
     }
 
+    public void setCurrentUser(boolean curUser){
+        isCurrentUser = curUser;
+    }
+
+    public boolean isItCurrentUser(){
+        return isCurrentUser;
+    }
     String username;
     String password;
     String privileges;
     boolean lightTheme;
+    boolean isCurrentUser;
 }

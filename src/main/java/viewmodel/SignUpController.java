@@ -65,7 +65,7 @@ public class SignUpController {
         }
         //String privileges = "all";
         System.out.println(privileges);
-        Client curClient = new Client(userName, passWord, privileges, true);
+        Client curClient = new Client(userName, passWord, privileges, true, false);
         //System.out.println("Calling getInstance from SignUpController");
         //UserSession newClient = UserSession.getInstance(registerUserName.getText(), registerPassword.getText());
         boolean insertSuccessful = cnUtil.insertClient(curClient);

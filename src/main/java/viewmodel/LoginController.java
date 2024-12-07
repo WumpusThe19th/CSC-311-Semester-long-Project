@@ -20,6 +20,7 @@ import model.Client;
 import service.UserSession;
 
 import java.util.HashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class LoginController {
@@ -40,6 +41,8 @@ public class LoginController {
 
     @FXML
     private GridPane rootpane;
+
+    private final ReentrantLock lock = new ReentrantLock();
     public void initialize() {
         rootpane.setBackground(new Background(
                         createImage("https://edencoding.com/wp-content/uploads/2021/03/layer_06_1920x1080.png"),
@@ -68,26 +71,22 @@ public class LoginController {
     @FXML
     public boolean login(ActionEvent actionEvent) {
         DbConnectivityClass instance = DbConnectivityClass.getInstance();
-        HashMap<String, Client> clients = instance.getClientData();
-        if (clients.containsKey(usernameTextField.getText())){
-            //System.out.println("This is a user in the database");
-            System.out.println(clients.get(usernameTextField.getText()));
-            System.out.println(clients.get(usernameTextField.getText()).getPassword());
-
-            if (clients.get(usernameTextField.getText()).getPassword().equals(passwordField.getText())){
-                //System.out.println("Pass matches this record");
-
-            }
-            else{
-                passNotFound.setVisible(true);
-                return false;
-            }
-        }
-        else{
+        HashMap<String, Client> clients = instance.getClientData(false);
+        if (!clients.containsKey(usernameTextField.getText())) {
             userNotFound.setVisible(true);
             return false;
         }
+        if (!clients.get(usernameTextField.getText()).getPassword().equals(passwordField.getText())){
+            //System.out.println("Pass matches this record");
+            passNotFound.setVisible(true);
+            return false;
+        }
         try {
+            lock.lock();
+            clients.get(usernameTextField.getText()).setCurrentUser(true);
+            instance.editClient(usernameTextField.getText(), clients.get(usernameTextField.getText()));
+            System.out.println(clients.get(usernameTextField.getText()).isItCurrentUser());
+            UserSession inst = UserSession.getInstance(clients.get(usernameTextField.getText()));
             Parent root = FXMLLoader.load(getClass().getResource("/view/db_interface_gui.fxml"));
             Scene scene = new Scene(root, 900, 600);
             //Tweak this
@@ -95,8 +94,12 @@ public class LoginController {
             window.setScene(scene);
             window.show();
             return true;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
         }
         return false;
     }

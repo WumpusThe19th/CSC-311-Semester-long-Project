@@ -1,5 +1,7 @@
 package service;
 
+import model.Client;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.prefs.Preferences;
@@ -29,7 +31,7 @@ public class UserSession {
 
 
 
-    public static UserSession getInstance(String userName,String password, String privileges, boolean lightTheme) {
+    public static synchronized UserSession getInstance(String userName,String password, String privileges, boolean lightTheme) {
         if(instance == null) {
             instance = new UserSession(userName, password, privileges, lightTheme);
         }
@@ -38,10 +40,18 @@ public class UserSession {
     }
 
     //Oh wait. This doesn't actually require an identifier.
-    public static UserSession getInstance(String userName,String password) {
+    public static synchronized UserSession getInstance(String userName,String password) {
         if(instance == null) {
             System.out.println("The 2 argument method says there is no previous instance");
             instance = new UserSession(userName, password, "NONE", true);
+        }
+        return instance;
+    }
+
+    public static UserSession getInstance(Client client){
+        if (instance == null){
+            System.out.println("The client method says there's no previous instance");
+            instance = new UserSession(client.getUsername(), client.getPassword(), client.getPrivileges(), client.isLightTheme());
         }
         return instance;
     }

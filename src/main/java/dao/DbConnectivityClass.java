@@ -61,8 +61,13 @@ public class DbConnectivityClass {
             return data;
         }
 
-        public HashMap<String, Client> getClientData(){
-            System.out.println("getClientData");
+        public HashMap<String, Client> getClientData(Boolean shouldFetch){
+            //System.out.println("getClientData");
+            if (!shouldFetch){
+                System.out.println("Clients is already initialized, and we don't need to re-fetch it");
+                return clients;
+            }
+            System.out.println("We are grabbing Clients from the database");
             connectToDatabase();
                 try {
             Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
@@ -81,7 +86,8 @@ public class DbConnectivityClass {
                 System.out.println(privileges);
                 boolean lightTheme = resultSet.getBoolean("lighttheme");
                 System.out.println(lightTheme);
-                clients.put(username, new Client(username, password, privileges, lightTheme));
+                boolean isCurrentUser = resultSet.getBoolean("isCurrentUser");
+                clients.put(username, new Client(username, password, privileges, lightTheme, isCurrentUser));
             }
             preparedStatement.close();
             conn.close();
@@ -125,7 +131,7 @@ public class DbConnectivityClass {
                          "username VARCHAR(200) NOT NULL," + "password VARCHAR(200) NOT NULL," + "privileges VARCHAR(200) NOT NULL," + "lighttheme BOOLEAN NOT NULL)";
                 statement.executeUpdate(sql2);
                 //statement = conn.createStatement();
-                //String sqlImSoSorryIForgot = "ALTER TABLE clients ADD COLUMN lighttheme BOOLEAN;";
+                //String sqlImSoSorryIForgot = "ALTER TABLE clients ADD COLUMN isCurrentUser BOOLEAN;";
                 //statement.executeUpdate(sqlImSoSorryIForgot);
                 //System.out.println("Something");
                 //check if we have users in the table users
@@ -298,6 +304,29 @@ public class DbConnectivityClass {
         return false;
     }
 
+    public void editClient(String id, Client p) {
+        connectToDatabase();
+        try {
+            Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+            //Ensure
+            String resetPhrase = "UPDATE clients SET IsCurrentUser = false";
+            PreparedStatement resetStatement = conn.prepareStatement(resetPhrase);
+            resetStatement.executeUpdate();
+            String sql = "UPDATE clients SET username=?, password=?, privileges=?, lighttheme=?, isCurrentUser=? WHERE username=?";
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, p.getUsername());
+            preparedStatement.setString(2, p.getPassword());
+            preparedStatement.setString(3, p.getPrivileges());
+            preparedStatement.setBoolean(4, p.isLightTheme());
+            preparedStatement.setBoolean(5, p.isItCurrentUser());
+            preparedStatement.setString(6, id);
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            conn.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
         public void editUser(int id, Person p) {
             connectToDatabase();
             try {

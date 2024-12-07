@@ -70,8 +70,8 @@
                  <items>
                      <FXCollections fx:factory="observableArrayList">
                          <String fx:value="Read/Write" />
-                         <String fx:value="Import/Export" />
                          <String fx:value="None" />
+                         <String fx:value="Import/Export" />
                      </FXCollections>
                  </items>
              </ComboBox>

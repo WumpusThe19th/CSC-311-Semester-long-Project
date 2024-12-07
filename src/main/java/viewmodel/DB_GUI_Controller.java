@@ -21,6 +21,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -35,12 +36,14 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.*;
 
 public class DB_GUI_Controller implements Initializable {
 
     @FXML
     ProgressBar progressBar;
+    private final ReentrantLock lock = new ReentrantLock();
 
     StorageUploader store = new StorageUploader();
     @FXML
@@ -99,9 +102,9 @@ public class DB_GUI_Controller implements Initializable {
             email.textProperty().addListener((observable, oldValue, newValue) -> {
                 onEmailUpdated(newValue);
             });
-            imageURL.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
-                imageURLPopUp.show(stage, e.getScreenX(), e.getScreenY());
-            });
+            //imageURL.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
+                //imageURLPopUp.show(stage, e.getScreenX(), e.getScreenY());
+            //});
             major.valueProperty().addListener(new ChangeListener<String>() {
               @Override
               public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -147,6 +150,11 @@ public class DB_GUI_Controller implements Initializable {
         }
     }
 
+    @FXML
+    private void handleShortcuts(KeyEvent e){
+        System.out.println(e.isControlDown());
+    }
+
     //Methods to listen for when the field is updated.
     public void onFirstNameUpdated(String newText) {
         Pattern p = Pattern.compile("\\w{2,25}");
@@ -183,8 +191,8 @@ public class DB_GUI_Controller implements Initializable {
     }
 
     public void onEmailUpdated(String newText) {
-        Pattern p = Pattern.compile("\\w{2,25}");
-        boolean tOne = newText.matches("\\w{2,25}");
+        Pattern p = Pattern.compile("[a-zA-Z]{3,15}@[a-z][.][.com|.edu]");
+        boolean tOne = newText.matches("[a-zA-Z]{3,15}@[a-z][.][.com|.edu]");
         //System.out.println(newText + " is valid:" + tOne);
         if (!tOne) {
             //shoutBox.getChildren().add(new Label("Name must be 2-25 characters long"));
@@ -329,7 +337,10 @@ public class DB_GUI_Controller implements Initializable {
     @FXML
     protected void logOut(ActionEvent actionEvent) {
         try {
-            UserSession.getInstance("n/a", "n/a").cleanUserSession();
+            lock.lock();
+            UserSession inst = UserSession.getInstance("n/a", "n/a");
+            inst.getUserName();
+            inst.cleanUserSession();
             clearWholeTable();
             Parent root = FXMLLoader.load(getClass().getResource("/view/login.fxml"));
             Scene scene = new Scene(root, 900, 600);
@@ -339,6 +350,9 @@ public class DB_GUI_Controller implements Initializable {
             window.show();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
         }
     }
 
@@ -352,6 +366,19 @@ public class DB_GUI_Controller implements Initializable {
     protected void displayAbout() {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/view/about.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(root, 600, 500);
+            stage.setScene(scene);
+            stage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    protected void displayHelp() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/view/help.fxml"));
             Stage stage = new Stage();
             Scene scene = new Scene(root, 600, 500);
             stage.setScene(scene);
@@ -471,6 +498,18 @@ public class DB_GUI_Controller implements Initializable {
         major.setValue(p.getMajor());
         email.setText(p.getEmail());
         imageURL.setText(p.getImageURL());
+        try{
+            img_view.setImage(new Image(p.getImageURL()));
+            Label lbl = new Label("Image loaded successfully.");
+            lbl.setWrapText(true);
+            shoutBox.getChildren().add(lbl);
+        }
+        catch (Exception e) {
+            System.out.println("Image not successfully loaded: Image URL does not exist");
+            Label lbl = new Label("Image not successfully loaded: Image URL does not exist");
+            lbl.setWrapText(true);
+            shoutBox.getChildren().add(lbl);
+        }
     }
 
     public void lightTheme() {

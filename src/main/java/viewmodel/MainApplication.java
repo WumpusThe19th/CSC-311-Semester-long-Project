@@ -9,7 +9,11 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import model.Client;
 import service.UserSession;
+
+import java.util.HashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MainApplication extends Application {
 
@@ -36,7 +40,7 @@ public class MainApplication extends Application {
     }
 
     //If fade, boot to the log in. Otherwise, boot to the interface.
-    private void showScene1() {
+    private boolean showScene1() {
         try {
             if (skipFade) {
                 UserSession curUser = UserSession.getInstance("debugGuest", "longtermorganfailure20092020", "all",true);
@@ -52,17 +56,32 @@ public class MainApplication extends Application {
                 //scene.getStylesheets().add(getClass().getResource("/css/lightTheme.css").toExternalForm());
                 primaryStage.setScene(scene);
                 primaryStage.show();
-                changeScene();
+                DbConnectivityClass instance = DbConnectivityClass.getInstance();
+                HashMap<String, Client> clients = instance.getClientData(true);
+                for (String key : clients.keySet()) {
+                    System.out.println("Key: " + key + ", Value: " + clients.get(key) + " isCurrentUser: " + clients.get(key).isItCurrentUser() );
+
+                    if (clients.get(key).isItCurrentUser()){
+                        System.out.println("We have a previous user, and should boot straight to the application screen");
+                        UserSession inst = UserSession.getInstance(clients.get(key));
+                        changeScene("db_interface_gui");
+                        return true;
+                    }
+                }
+                changeScene("login");
+
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     //Change to login. Finish the fade.
-    public void changeScene() {
+    public void changeScene(String page) {
         try {
-            Parent newRoot = FXMLLoader.load(getClass().getResource("/view/login.fxml").toURI().toURL());
+            Parent newRoot = FXMLLoader.load(getClass().getResource("/view/"+page+".fxml").toURI().toURL());
             Scene currentScene = primaryStage.getScene();
             Parent currentRoot = currentScene.getRoot();
             //currentScene.getStylesheets().add(getClass().getResource("/css/lightTheme.css").toExternalForm());
